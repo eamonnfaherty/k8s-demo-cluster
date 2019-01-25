@@ -22,7 +22,7 @@ create-development-cluster:
 		cidr_c_public=$(development.cidr_c_public) \
 		cidr_c_private=$(development.cidr_c_private)
 	$(MAKE) create-tiller-service-account cluster_name=$(development.cluster_name)
-	$(MAKE) -C k8s create-nodes cluster_name=$(development.cluster_name)
+	$(MAKE) -C k8s create-nodes cluster_name=$(production.cluster_name) ssh_key_pair_name=$(development.ssh_key_pair_name)
 
 
 create-production-cluster:
@@ -37,7 +37,7 @@ create-production-cluster:
 		cidr_c_public=$(production.cidr_c_public) \
 		cidr_c_private=$(production.cidr_c_private)
 	$(MAKE) create-tiller-service-account cluster_name=$(production.cluster_name)
-	$(MAKE) -C k8s create-nodes cluster_name=$(production.cluster_name)
+	$(MAKE) -C k8s create-nodes cluster_name=$(production.cluster_name) ssh_key_pair_name=$(production.ssh_key_pair_name)
 
 
 create-clusters: create-development-cluster create-production-cluster
