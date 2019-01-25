@@ -43,7 +43,7 @@ create-nodes:
 			ParameterKey=ClusterName,ParameterValue=$(EKS_CLUSTERNAME) \
 			ParameterKey=ClusterStackName,ParameterValue=$(EKS_STACKNAME) \
 			ParameterKey=NodeInstanceType,ParameterValue=t2.medium \
-			ParameterKey=KeyName,ParameterValue=foo
+			ParameterKey=KeyName,ParameterValue=$(ssh_key_pair_name)
 	aws cloudformation wait stack-create-complete --stack-name $(NODE_STACKNAME)
 
 register-nodes:
