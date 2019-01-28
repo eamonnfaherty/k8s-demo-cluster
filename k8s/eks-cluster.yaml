@@ -6,7 +6,7 @@ Parameters:
     Type: String
   EKSVersion:
     Type: String
-    Default: '1.10'
+    Default: '1.11'
   CidrVPC:
     Type: String
   CidrAPublic:

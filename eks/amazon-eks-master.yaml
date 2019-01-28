@@ -1,0 +1,49 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Amazon EKS Sample VPC'
+
+Parameters:
+  ClusterName:
+    Type: String
+
+  EKSVersion:
+    Type: String
+
+  NetworkingStackName:
+    Type: String
+
+Resources:
+  ServiceRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - 'sts:AssumeRole'
+            Effect: Allow
+            Principal:
+              Service:
+                - eks.amazonaws.com
+        Version: 2012-10-17
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/AmazonEKSServicePolicy'
+        - 'arn:aws:iam::aws:policy/AmazonEKSClusterPolicy'
+
+  ControlPlane:
+    Type: 'AWS::EKS::Cluster'
+    Properties:
+      Name: !Ref ClusterName
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+          - Fn::ImportValue:
+              !Sub "${NetworkingStackName}::ControlPlaneSecurityGroup"
+        SubnetIds:
+          - Fn::ImportValue:
+              !Sub "${NetworkingStackName}::Subnet01"
+          - Fn::ImportValue:
+              !Sub "${NetworkingStackName}::Subnet02"
+          - Fn::ImportValue:
+              !Sub "${NetworkingStackName}::Subnet03"
+      RoleArn: !GetAtt ServiceRole.Arn
+      Version: !Ref EKSVersion
+

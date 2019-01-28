@@ -70,7 +70,7 @@ Parameters:
   NodeAutoScalingGroupMinSize:
     Type: Number
     Description: Minimum size of Node Group ASG.
-    Default: 1
+    Default: 2
 
   NodeAutoScalingGroupMaxSize:
     Type: Number
@@ -98,14 +98,14 @@ Parameters:
 Mappings:
   amis:
     us-west-2:
-      normal: 'ami-0a54c984b9f908c81'
-      gpu: 'ami-0731694d53ef9604b'
+      normal: 'ami-09e1df3bad220af0b'
+      gpu: 'ami-0ebf0561e61a2be02'
     us-east-1:
-      normal: 'ami-0440e4f6b9713faf6'
-      gpu: 'ami-058bfb8c236caae89'
+      normal: 'ami-04358410d28eaab63'
+      gpu: 'ami-0131c0ca222183def'
     eu-west-1:
-      normal: 'ami-0c7a4976cb6fafd3a'
-      gpu: 'ami-0706dc8a5eed2eed9'
+      normal: 'ami-01e08d22b9439c15a'
+      gpu: 'ami-097978e7acde1fd7c'
 
   MaxPodsPerNode:
     c4.large:
@@ -264,8 +264,9 @@ Resources:
             DeleteOnTermination: true
       UserData:  # add --use-max-pods
         Fn::Base64: !Sub |
-          #!/bin/bash -xe
-          /etc/eks/bootstrap.sh ${ClusterName}
+          #!/bin/bash
+          set -o xtrace
+          /etc/eks/bootstrap.sh ${ClusterName} ${BootstrapArguments}
           /opt/aws/bin/cfn-signal --exit-code $? \
               --stack ${AWS::StackName} \
               --resource NodeGroup \
